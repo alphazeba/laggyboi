@@ -1,7 +1,9 @@
-
+use log::debug;
 #[tokio::main]
 async fn main() {
-    println!("Hello, world!");
-    laggyboi::tcp_tunnel(400).await;
-    println!("exiting");
+    env_logger::init();
+    debug!("Hello, world!");
+    let tunnel = laggyboi::TcpTunnel::new("127.0.0.1:8008", "127.0.0.1:4269", 500);
+    tunnel.start().await;
+    debug!("exiting");
 }
