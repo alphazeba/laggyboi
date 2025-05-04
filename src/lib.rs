@@ -80,7 +80,8 @@ impl TcpTunnel {
                         sleep(Duration::from_millis(self.check_period_ms));
                         match last_received_instant.lock() {
                             Ok(last_received_instant) => {
-                                let timeout_instant = last_received_instant.checked_add(Duration::from_millis(self.connection_timeout_ms + self.lag_ms))
+                                let timeout_instant = last_received_instant
+                                    .checked_add(Duration::from_millis(self.connection_timeout_ms + self.lag_ms))
                                     .expect("somehow the instant is not valid");
                                 if timeout_instant < Instant::now() {
                                     debug!("have not seen an incoming packet in too long, shutting down");
@@ -93,6 +94,8 @@ impl TcpTunnel {
                             }
                         }
                     }
+                    // the up read thread gets stuck in the .read method.
+                    // it continuously waits receiving no values.  Unlike the down read which continuously receives 0 bytes.
                     debug!("aborting the up read thread");
                     up_read_thread.abort();
                     let _ = join!(down_write_thread, up_write_thread, down_read_thread, up_read_thread);
