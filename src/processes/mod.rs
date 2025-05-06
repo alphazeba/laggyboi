@@ -1,4 +1,4 @@
 pub mod connection;
-mod stream_data;
 mod read_loop;
+mod stream_data;
 mod write_loop;
