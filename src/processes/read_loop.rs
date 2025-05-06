@@ -59,7 +59,7 @@ where
             handle_receive_bytes(sender, &buffer[0..num_bytes])
                 .and_then(|()| update_last_read_instant(last_read_instant))
         }
-        Err(e) => Err(ReadLoopErr::ReadTimeout(e.to_string())),
+        Err(e) => Err(ReadLoopErr::ReadFail(e.to_string())),
     }
 }
 
@@ -88,4 +88,6 @@ enum ReadLoopErr {
     SendToSenderFail(String),
     #[error("Read timeout: {0}")]
     ReadTimeout(String),
+    #[error("Read failed: {0}")]
+    ReadFail(String),
 }
